@@ -1,0 +1,52 @@
+<div class="blank clear-both">
+	<div class="block double-padded" style="min-height: 800px;">
+		<h2 class="green">Самовывозы обновлены - {$date|wa_date}</h2>
+		<h2>Всего ПВЗ - {$data|count}</h2>
+		<div style="margin:20px 0;"><button class="button green" id="run">Обновить и выгрузить</button></div>
+		<div class="result"></div>
+		<div style="display: flex; justify-content: space-between; flex-wrap:wrap; ">
+			{foreach $data as $point}	
+				<ul class="my_block zebra">
+					<li>{$point.id}</li>
+					<li>{$point.name}</li>
+					<li>{$point.coord}</li>
+					<li>{$point.region}</li>
+					<li>{$point.street}</li>
+					<li>{$point.number_home}</li>
+					<li>{$point.phones}</li>
+					<li>{$point.emails}</li>
+					<li>
+						{foreach $point.scheduleItems as $hours}
+							<div>{$hours.startDay} {$hours.startTime} - {$hours.endDay} {$hours.endTime}</div>
+						{/foreach}
+					</li>
+				</ul>
+			{/foreach}
+		</div>
+	</div>
+</div>
+{literal}
+	<style>
+		.my_block { 
+			width: calc(25% - 20px);
+			margin-bottom: 20px!important;
+		    border: 1px solid #f3f3f3;
+		    box-shadow: 2px 2px 3px 0 #bdbdbd;
+		    margin-bottom: 30px;
+		 }
+	</style>
+	<script>
+		$(document).on("click", "#run", function(e){
+			$('.result').html("<i class='icon 16 loading'></i>");	
+			$.ajax({
+				type : "POST",
+				url : "/webasyst/shop/?plugin=yandexpoints&action=run",
+				data: {},
+				dataType: 'json',
+				success: function(msg){
+					$('.result').html(msg.result);			
+				}
+			});
+		});
+	</script>
+{/literal}
